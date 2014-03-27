@@ -28,6 +28,8 @@ use Doctrine\ORM\EntityRepository as BaseEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use mvrhov\Bundle\ResourceBundle\Doctrine\Comparison;
 use mvrhov\Bundle\ResourceBundle\Model\RepositoryInterface;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 
 /**
  * short description
@@ -136,6 +138,29 @@ class EntityRepository extends BaseEntityRepository implements RepositoryInterfa
         return $queryBuilder
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function findPaginated(array $criteria, array $orderBy = null)
+    {
+        $queryBuilder = $this->getCollectionQueryBuilder();
+
+        $this->applyCriteria($queryBuilder, $criteria);
+        $this->applySorting($queryBuilder, $orderBy);
+
+        return $this->getPaginator($queryBuilder);
+    }
+
+    /**
+    * @param QueryBuilder $queryBuilder
+    *
+    * @return Pagerfanta
+    */
+    protected function getPaginator(QueryBuilder $queryBuilder)
+    {
+        return new Pagerfanta(new DoctrineORMAdapter($queryBuilder, true, true));
     }
 
     /**

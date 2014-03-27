@@ -25,6 +25,7 @@
 namespace mvrhov\Bundle\ResourceBundle\Model;
 
 use Doctrine\Common\Persistence\ObjectRepository;
+use Pagerfanta\Pagerfanta;
 
 /**
  * Repository interface
@@ -57,4 +58,14 @@ interface RepositoryInterface extends ObjectRepository
      * @return self
      */
     public function delete($instance, $andFlush = true);
+
+    /**
+     * Returns paginated collection
+     *
+     * @param array $criteria
+     * @param array $orderBy
+     *
+     * @return Pagerfanta
+     */
+    public function findPaginated(array $criteria, array $orderBy = null);
 }
