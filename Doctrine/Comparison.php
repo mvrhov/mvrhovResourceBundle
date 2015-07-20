@@ -59,7 +59,8 @@ class Comparison
 
         $r = new \ReflectionClass($cc);
 
-        return in_array($value, $r->getConstants());
+        //we need strict checking as $value needs to be string
+        return in_array($value, $r->getConstants(), true);
     }
 
     /**
